@@ -1,5 +1,5 @@
 resource "aws_wafv2_web_acl" "this" {
-  name        = format("%s-%s", local.prefix, var.name)
+  name        = format("%s-%s-waf", local.prefix, var.name)
   description = "WAFv2 ACL for ${var.name}"
 
   scope = var.scope
