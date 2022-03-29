@@ -95,3 +95,15 @@ variable "default_action" {
   description = "The action to perform if none of the rules contained in the WebACL match."
   default     = "allow"
 }
+
+variable "is_enable_cloudwatch_metrics" {
+  type        = bool
+  description = "The action to perform if none of the rules contained in the WebACL match."
+  default     = true
+}
+
+variable "is_enable_sampled_requests" {
+  type        = bool
+  description = "Whether AWS WAF should store a sampling of the web requests that match the rules. You can view the sampled requests through the AWS WAF console."
+  default     = true
+}
