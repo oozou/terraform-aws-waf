@@ -16,7 +16,7 @@ module "waf" {
   environment = "dev"
   managed_rules = [
     {
-      name            = "AWS-AWSManagedRulesAdminProtectionRuleSet",
+      name            = "AWSManagedRulesAdminProtectionRuleSet",
       priority        = 60
       override_action = "none"
       excluded_rules  = []
