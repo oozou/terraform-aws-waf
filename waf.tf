@@ -138,6 +138,9 @@ resource "aws_wafv2_web_acl" "this" {
     local.tags,
     { "Name" = format("%s-%s", local.prefix, var.name) }
   )
+  depends_on = [
+    aws_wafv2_ip_set.ipset,
+  ]
 }
 
 resource "aws_wafv2_web_acl_association" "this" {
