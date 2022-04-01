@@ -19,7 +19,7 @@ resource "aws_wafv2_web_acl" "this" {
   visibility_config {
     cloudwatch_metrics_enabled = var.is_enable_cloudwatch_metrics
     sampled_requests_enabled   = var.is_enable_sampled_requests
-    metric_name                = var.name
+    metric_name                = "All"
   }
 
   dynamic "rule" {
