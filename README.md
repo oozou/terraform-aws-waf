@@ -62,6 +62,7 @@ module "waf" {
       }
     ]
   }
+  association_resources = "arn:xxxxx"
   tags = {
     "Custom-Tag" = "1"
   }
