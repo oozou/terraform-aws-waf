@@ -15,7 +15,15 @@ variable "name" {
 
 variable "scope" {
   type        = string
-  description = "The scope of this Web ACL. Valid options: CLOUDFRONT, REGIONAL."
+  description = <<-DOC
+    Specifies whether this is for an AWS CloudFront distribution or for a regional application.
+    Possible values are `CLOUDFRONT` or `REGIONAL`.
+    To work with CloudFront, you must also specify the region us-east-1 (N. Virginia) on the AWS provider.
+  DOC
+  validation {
+    condition     = contains(["CLOUDFRONT", "REGIONAL"], var.scope)
+    error_message = "Allowed values: `CLOUDFRONT`, `REGIONAL`."
+    }
 }
 
 variable "managed_rules" {
