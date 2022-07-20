@@ -17,13 +17,13 @@ resource "aws_wafv2_web_acl" "this" {
   }
 
   visibility_config {
-    cloudwatch_metrics_enabled = true
-    sampled_requests_enabled   = true
-    metric_name                = var.name
+    cloudwatch_metrics_enabled = var.is_enable_cloudwatch_metrics
+    sampled_requests_enabled   = var.is_enable_sampled_requests
+    metric_name                = "All"
   }
 
   dynamic "rule" {
-    for_each = var.managed_rules
+    for_each = local.managed_rules
     content {
       name     = rule.value.name
       priority = rule.value.priority
@@ -55,9 +55,9 @@ resource "aws_wafv2_web_acl" "this" {
       }
 
       visibility_config {
-        cloudwatch_metrics_enabled = true
+        cloudwatch_metrics_enabled = var.is_enable_cloudwatch_metrics
         metric_name                = rule.value.name
-        sampled_requests_enabled   = true
+        sampled_requests_enabled   = var.is_enable_sampled_requests
       }
     }
   }
@@ -92,16 +92,55 @@ resource "aws_wafv2_web_acl" "this" {
       }
 
       visibility_config {
-        cloudwatch_metrics_enabled = true
+        cloudwatch_metrics_enabled = var.is_enable_cloudwatch_metrics
         metric_name                = rule.value.name
-        sampled_requests_enabled   = true
+        sampled_requests_enabled   = var.is_enable_sampled_requests
       }
     }
   }
+
+
+
+  dynamic "rule" {
+    for_each = var.ip_rate_based_rule != null ? [var.ip_rate_based_rule] : []
+    content {
+      name     = rule.value.name
+      priority = rule.value.priority
+
+      action {
+        dynamic "count" {
+          for_each = rule.value.action == "count" ? [1] : []
+          content {}
+        }
+
+        dynamic "block" {
+          for_each = rule.value.action == "block" ? [1] : []
+          content {}
+        }
+      }
+
+      statement {
+        rate_based_statement {
+          limit              = rule.value.limit
+          aggregate_key_type = "IP"
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = var.is_enable_cloudwatch_metrics
+        metric_name                = rule.value.name
+        sampled_requests_enabled   = var.is_enable_sampled_requests
+      }
+    }
+  }
+
   tags = merge(
     local.tags,
     { "Name" = format("%s-%s", local.prefix, var.name) }
   )
+  depends_on = [
+    aws_wafv2_ip_set.ipset,
+  ]
 }
 
 resource "aws_wafv2_web_acl_association" "this" {
