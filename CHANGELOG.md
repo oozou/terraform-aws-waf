@@ -2,6 +2,15 @@
 
 All notable changes to this module will be documented in this file.
 
+## [1.0.2] - 2022-07-22
+
+### Added
+
+- support logging kms, log retension
+- variables
+  - `cloudwatch_log_retention_in_days`
+  - `cloudwatch_log_kms_key_id`
+
 ## [1.0.1] - 2022-07-20
 
 ### Added

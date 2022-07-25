@@ -3,8 +3,8 @@ provider "aws" {
 }
 
 provider "aws" {
-  alias      = "virginia"
-  region     = "us-east-1"
+  alias  = "virginia"
+  region = "us-east-1"
 }
 
 module "waf_cloudfront" {
@@ -12,9 +12,9 @@ module "waf_cloudfront" {
   providers = {
     aws = aws.virginia
   }
-  name   = "cloudfront-waf"
-  prefix = "oozou"
-  scope  = "CLOUDFRONT"  //To work with CloudFront, you must also specify the region us-east-1 (N. Virginia) on the AWS provider.
+  name        = "cloudfront-waf"
+  prefix      = "oozou"
+  scope       = "CLOUDFRONT" //To work with CloudFront, you must also specify the region us-east-1 (N. Virginia) on the AWS provider.
   environment = "dev"
   ip_sets_rule = [
     {
@@ -39,10 +39,10 @@ module "waf_cloudfront" {
 
 
 module "waf_alb" {
-  source = "../.."
-  name   = "alb-waf"
-  prefix = "oozou"
-  scope  = "REGIONAL" 
+  source      = "../.."
+  name        = "alb-waf"
+  prefix      = "oozou"
+  scope       = "REGIONAL"
   environment = "dev"
 
   managed_rules = [
