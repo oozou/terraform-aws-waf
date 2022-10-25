@@ -2,7 +2,14 @@
 
 All notable changes to this module will be documented in this file.
 
-## [1.0.2] - 2022-07-22
+## [v1.0.3] - 2022-10-25
+
+### Changed
+
+- Update `provider/aws` version to `>= 4.0.0`
+- Update `.README.md`
+
+## [v1.0.2] - 2022-07-22
 
 ### Added
 
@@ -11,7 +18,7 @@ All notable changes to this module will be documented in this file.
   - `cloudwatch_log_retention_in_days`
   - `cloudwatch_log_kms_key_id`
 
-## [1.0.1] - 2022-07-20
+## [v1.0.1] - 2022-07-20
 
 ### Added
 
@@ -30,7 +37,7 @@ All notable changes to this module will be documented in this file.
 
 - move default rule from variables to locals.tf
 
-## [1.0.0] - 2022-05-31
+## [v1.0.0] - 2022-05-31
 
 ### Added
 
