@@ -39,6 +39,7 @@ variable "managed_rules" {
     priority        = number
     override_action = string
     excluded_rules  = list(string)
+    scope_down_statements = any
   }))
   description = "List of Managed WAF rules."
   default     = []
@@ -53,6 +54,20 @@ variable "ip_sets_rule" {
     ip_address_version = string
   }))
   description = "A rule to detect web requests coming from particular IP addresses or address ranges."
+  default     = []
+}
+
+variable "rate_based_statement_rules" {
+  type = list(object({
+    name                  = string
+    priority              = number
+    action                = string
+    limit                 = number    // between 100 and 20,000,000
+    aggregate_key_type    = string    // FORWARDED_IP or IP
+    forwarded_ip_config   = any       // If aggregate_key_type is set to FORWARDED_IP, this block is required
+    scope_down_statements  = any
+  }))
+  description = "A rate-based rule tracks the rate of requests for each originating IP address, and triggers the rule action on IPs with rates that go over a limit."
   default     = []
 }
 
