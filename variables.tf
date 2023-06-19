@@ -45,6 +45,7 @@ variable "managed_rules" {
 }
 
 variable "ip_sets_rule" {
+  # List of object need to have consis structure --> cv to any --> and make good description
   type = list(object({
     name               = string
     priority           = number
@@ -53,6 +54,33 @@ variable "ip_sets_rule" {
     ip_address_version = string
   }))
   description = "A rule to detect web requests coming from particular IP addresses or address ranges."
+  default     = []
+}
+
+variable "ip_set" {
+  description = <<EOL
+  To create IP set ex.
+  ip_sets = {
+    "oozou-vpn-ipv4-set" = {
+      ip_addresses       = ["127.0.01/32"]
+      ip_address_version = "IPV4"
+    },
+    "oozou-vpn-ipv6-set" = {
+      ip_addresses       = ["2403:6200:88a2:a6f8:2096:9b42:31f8:61fd/128"]
+      ip_address_version = "IPV6"
+    }
+  }
+  EOL
+  type = map(object({
+    ip_addresses       = list(string)
+    ip_address_version = string
+  }))
+  default = {}
+}
+
+variable "custom_rules" {
+  description = "Find the example for these structure"
+  type        = any
   default     = []
 }
 
