@@ -547,6 +547,7 @@ resource "aws_wafv2_web_acl" "this" {
     }
   }
 
+  # ANCHOR: Can remoove infuture
   dynamic "rule" {
     for_each = var.ip_sets_rule
     content {
