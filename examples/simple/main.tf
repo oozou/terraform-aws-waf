@@ -14,7 +14,7 @@ module "waf_cloudfront" {
   }
   name        = "cloudfront-waf"
   prefix      = "oozou"
-  scope       = "CLOUDFRONT" //To work with CloudFront, you must also specify the region us-east-1 (N. Virginia) on the AWS provider.
+  scope       = "CLOUDFRONT" # To work with CloudFront, you must also specify the region us-east-1 (N. Virginia) on the AWS provider.
   environment = "dev"
   ip_sets_rule = [
     {
