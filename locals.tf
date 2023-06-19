@@ -69,7 +69,7 @@ locals {
     local.originate_from_an_ip_addresses_in,
     local.has_a_label
   ]
-  byte_match_dynamic_blocks = [
+  request_component_dynamic_blocks = [
     local.single_header,
     local.all_headers,
     local.cookies,
@@ -80,5 +80,5 @@ locals {
     local.body,
     local.http_method,
   ]
-  support_inspect_types = concat(local.unique_dynamic_blocks, local.byte_match_dynamic_blocks)
+  support_inspect_types = concat(local.unique_dynamic_blocks, local.request_component_dynamic_blocks)
 }

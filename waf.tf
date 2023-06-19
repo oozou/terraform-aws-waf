@@ -128,7 +128,7 @@ resource "aws_wafv2_web_acl" "this" {
                 ## byte_match_statement (String Macth Condition)
                 #### https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl.html#byte_match_statement
                 dynamic "byte_match_statement" {
-                  for_each = contains(local.byte_match_dynamic_blocks, user_defined_statement.value.inspect) && lookup(user_defined_statement.value, "is_negated_statement", false) == false ? [1] : []
+                  for_each = contains(local.request_component_dynamic_blocks, user_defined_statement.value.inspect) && lookup(user_defined_statement.value, "is_negated_statement", false) == false ? [1] : []
                   content {
                     positional_constraint = user_defined_statement.value.positional_constraint
                     search_string         = user_defined_statement.value.search_string
@@ -270,7 +270,7 @@ resource "aws_wafv2_web_acl" "this" {
                       ## byte_match_statement (String Macth Condition)
                       #### https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl.html#byte_match_statement
                       dynamic "byte_match_statement" {
-                        for_each = contains(local.byte_match_dynamic_blocks, user_defined_statement.value.inspect) ? [1] : []
+                        for_each = contains(local.request_component_dynamic_blocks, user_defined_statement.value.inspect) ? [1] : []
                         content {
                           positional_constraint = user_defined_statement.value.positional_constraint
                           search_string         = user_defined_statement.value.search_string
@@ -430,7 +430,7 @@ resource "aws_wafv2_web_acl" "this" {
         ## byte_match_statement (String Macth Condition)
         #### https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl.html#byte_match_statement
         dynamic "byte_match_statement" {
-          for_each = rule.value.expression_type == "match-statement" && contains(local.byte_match_dynamic_blocks, rule.value.statements[0].inspect) ? [1] : []
+          for_each = rule.value.expression_type == "match-statement" && contains(local.request_component_dynamic_blocks, rule.value.statements[0].inspect) ? [1] : []
           content {
             positional_constraint = rule.value.statements[0].positional_constraint
             search_string         = rule.value.statements[0].search_string
