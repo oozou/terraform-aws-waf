@@ -1,8 +1,11 @@
 resource "aws_wafv2_web_acl" "this" {
-  name        = format("%s-%s-waf", local.prefix, var.name)
-  description = "WAFv2 ACL for ${var.name}"
+  depends_on = [
+    aws_wafv2_ip_set.ipset,
+  ]
 
-  scope = var.scope
+  name        = format("%s-waf", local.name)
+  description = "WAFv2 ACL for ${format("%s-waf", local.name)}"
+  scope       = var.scope
 
   default_action {
     dynamic "allow" {
@@ -614,13 +617,7 @@ resource "aws_wafv2_web_acl" "this" {
     }
   }
 
-  tags = merge(
-    local.tags,
-    { "Name" = format("%s-%s", local.prefix, var.name) }
-  )
-  depends_on = [
-    aws_wafv2_ip_set.ipset,
-  ]
+  tags = merge(local.tags, { "Name" = format("%s-waf", local.name) })
 }
 
 resource "aws_wafv2_web_acl_association" "this" {

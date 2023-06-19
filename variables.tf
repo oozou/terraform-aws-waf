@@ -127,6 +127,7 @@ variable "ip_rate_based_rule" {
 
 variable "is_create_logging_configuration" {
   description = "Whether to create logging configuration in order start logging from a WAFv2 Web ACL to CloudWatch"
+  type        = bool
   default     = true
 }
 
