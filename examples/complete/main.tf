@@ -9,41 +9,66 @@ provider "aws" {
 
 module "waf_cloudfront" {
   source = "../.."
+
+  prefix      = var.prefix
+  environment = var.environment
+  name        = var.name
+
+  scope = "CLOUDFRONT" # To work with CloudFront, you must also specify the region us-east-1 (N. Virginia) on the AWS provider.
+
+  ip_set = {
+    "admin-vpn-ipv4-set" = {
+      ip_addresses       = ["127.0.0.1/32", "127.0.0.2/32", "127.0.0.3/32", "127.0.0.4/32", "127.0.0.5/32"]
+      ip_address_version = "IPV4"
+    },
+    "admin-vpn-ipv6-set" = {
+      ip_addresses       = ["1234:5678:9101:1121:3141:5161:7181:9202/128"],
+      ip_address_version = "IPV6"
+    }
+  }
+  custom_rules = [
+    {
+      name            = "control-access-to-cms-admin-page-rule" #
+      priority        = 70                                      ##
+      action          = "block"                                 # {count, allow, block}
+      expression_type = "and-statements"                        ##
+      statements = [                                            ##
+        {
+          inspect               = "single-header"
+          header_name           = "host"
+          positional_constraint = "CONTAINS"
+          search_string         = "cms.mobilethuat.starbuckscard.in.th"
+        },
+        {
+          inspect              = "originate-from-an-ip-addresses-in"
+          is_negated_statement = true
+          ip_set_key           = "admin-vpn-ipv4-set"
+        },
+        {
+          inspect              = "originate-from-an-ip-addresses-in"
+          is_negated_statement = true
+          ip_set_key           = "admin-vpn-ipv6-set"
+        }
+      ]
+    },
+  ]
+
   providers = {
     aws = aws.virginia
   }
-  name        = "cloudfront-waf"
-  prefix      = "oozou"
-  scope       = "CLOUDFRONT" //To work with CloudFront, you must also specify the region us-east-1 (N. Virginia) on the AWS provider.
-  environment = "dev"
-  ip_sets_rule = [
-    {
-      name               = "count-ip-set"
-      priority           = 5
-      action             = "count"
-      ip_address_version = "IPV4"
-      ip_set             = ["1.2.3.4/32", "5.6.7.8/32"]
-    },
-    {
-      name               = "block-ip-set"
-      priority           = 6
-      action             = "block"
-      ip_address_version = "IPV4"
-      ip_set             = ["10.0.1.1/32"]
-    }
-  ]
-  tags = {
-    "Custom-Tag" = "1"
-  }
+
+  tags = var.custom_tags
 }
 
 
 module "waf_alb" {
-  source      = "../.."
-  name        = "alb-waf"
-  prefix      = "oozou"
-  scope       = "REGIONAL"
-  environment = "dev"
+  source = "../.."
+
+  prefix      = var.prefix
+  environment = var.environment
+  name        = var.name
+
+  scope = "REGIONAL"
 
   managed_rules = [
     {
@@ -54,25 +79,45 @@ module "waf_alb" {
     }
   ]
 
-  ip_sets_rule = [
-    {
-      name               = "count-ip-set"
-      priority           = 5
-      action             = "count"
+  ip_set = {
+    "admin-vpn-ipv4-set" = {
+      ip_addresses       = ["127.0.0.1/32", "127.0.0.2/32", "127.0.0.3/32", "127.0.0.4/32", "127.0.0.5/32"]
       ip_address_version = "IPV4"
-      ip_set             = ["1.2.3.4/32", "5.6.7.8/32"]
     },
-    {
-      name               = "block-ip-set"
-      priority           = 6
-      action             = "block"
-      ip_address_version = "IPV4"
-      ip_set             = ["10.0.1.1/32"]
+    "admin-vpn-ipv6-set" = {
+      ip_addresses       = ["1234:5678:9101:1121:3141:5161:7181:9202/128"],
+      ip_address_version = "IPV6"
     }
+  }
+
+  custom_rules = [
+    {
+      name            = "control-access-to-cms-admin-page-rule" #
+      priority        = 70                                      ##
+      action          = "block"                                 # {count, allow, block}
+      expression_type = "and-statements"                        ##
+      statements = [                                            ##
+        {
+          inspect               = "single-header"
+          header_name           = "host"
+          positional_constraint = "CONTAINS"
+          search_string         = "cms.mobilethuat.starbuckscard.in.th"
+        },
+        {
+          inspect              = "originate-from-an-ip-addresses-in"
+          is_negated_statement = true
+          ip_set_key           = "admin-vpn-ipv4-set"
+        },
+        {
+          inspect              = "originate-from-an-ip-addresses-in"
+          is_negated_statement = true
+          ip_set_key           = "admin-vpn-ipv6-set"
+        }
+      ]
+    },
   ]
 
   association_resources = ["arn:aws:elasticloadbalancing:ap-southeast-1:xxxx:loadbalancer/app/xxxxx"]
-  tags = {
-    "Custom-Tag" = "1"
-  }
+
+  tags = var.custom_tags
 }

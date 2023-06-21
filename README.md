@@ -2,71 +2,219 @@
 
 Terraform module with create vpc and subnet resources on AWS.
 
-## Usage
+## Custom Rules Usage
 
 ```terraform
-module "waf" {
-  source = "git::ssh://git@github.com:oozou/terraform-aws-waf.git"
-  name   = "test-waf"
-  prefix = "oozou"
-  is_enable_default_rule = true
-  is_enable_sampled_requests = false
-  is_enable_cloudwatch_metrics = false
-  is_create_logging_configuration = true
-  scope  = "CLOUDFRONT"
-  environment = "dev"
-  managed_rules = [
-    {
-      name            = "AWSManagedRulesAdminProtectionRuleSet",
-      priority        = 60
-      override_action = "none"
-      excluded_rules  = []
-    }
-  ]
-  ip_sets_rule = [
-    {
-      name               = "block-ip-set"
-      priority           = 6
-      action             = "block"
-      ip_address_version = "IPV4"
-      ip_set             = ["10.0.1.1/32"]
-    }
-  ]
-  ip_rate_based_rule = {
-    name : "ip-rate-limit",
-    priority : 7,
-    action : "block",
-    limit : 100
-  }
-  redacted_fields = [
-    {
-      single_header = {
-        name = "user-agent"
-      }
-    }
-  ]
-
-  logging_filter = {
-    default_behavior = "DROP"
-    filter = [
+waf_custom_rules = [
+  {
+    name            = "match-originate-from-an-ip-addresses-in-rule" #
+    priority        = 10                                             ##
+    action          = "count"                                        # {count, allow, block}
+    expression_type = "match-statement"                              ##
+    statements = [                                                   ##
       {
-        behavior    = "KEEP"
-        requirement = "MEETS_ANY"
-        condition = [
-          {
-            action_condition = {
-              action = "ALLOW"
-            }
-          },
-        ]
+        inspect    = "originate-from-an-ip-addresses-in" ##
+        ip_set_key = "oozou-vpn-ipv4-set"                # Match above
       }
     ]
-  }
-  association_resources = "arn:xxxxx"
-  tags = {
-    "Custom-Tag" = "1"
-  }
-}
+  },
+  {
+    name            = "match-originate-from-a-country-in-rule" #
+    priority        = 20                                       ##
+    action          = "count"                                  # {count, allow, block}
+    expression_type = "match-statement"                        ##
+    statements = [                                             ##
+      {
+        inspect       = "originate-from-a-country-in" ##
+        country_codes = ["TH"]
+      }
+    ]
+  },
+  {
+    name            = "match-has-a-label-rule" #
+    priority        = 30                       ##
+    action          = "count"                  # {count, allow, block}
+    expression_type = "match-statement"        ##
+    statements = [                             ##
+      {
+        inspect = "has-a-label" ##
+        scope   = "LABEL"
+        key     = "awswaf:managed:aws:core-rule-set:GenericLFI_URIPath"
+      }
+    ]
+  },
+  /* -------------------------------------------------------------------------- */
+  /*                       Strgin Match Condition Example                       */
+  /* -------------------------------------------------------------------------- */
+  {
+    name            = "match-request-component-single-header-rule" #
+    priority        = 40                                           ##
+    action          = "count"                                      # {count, allow, block}
+    expression_type = "match-statement"                            ##
+    statements = [                                                 ##
+      {
+        inspect               = "single-header" ##
+        header_name           = "host"
+        positional_constraint = "CONTAINS"
+        search_string         = "STRING_TO_SEARCH"
+      }
+    ]
+  },
+  {
+    ## Not available (just for test case)
+    name            = "match-request-component-all-headers-rule" #
+    priority        = 41                                         ##
+    action          = "count"                                    # {count, allow, block}
+    expression_type = "match-statement"                          ##
+    statements = [                                               ##
+      {
+        inspect               = "all-headers" ##
+        positional_constraint = "CONTAINS"
+        search_string         = "STRING_TO_SEARCH"
+      }
+    ]
+  },
+  {
+    ## Not available (just for test case)
+    name            = "match-request-component-cookies-rule" #
+    priority        = 42                                     ##
+    action          = "count"                                # {count, allow, block}
+    expression_type = "match-statement"                      ##
+    statements = [                                           ##
+      {
+        inspect               = "cookies" ##
+        positional_constraint = "CONTAINS"
+        search_string         = "STRING_TO_SEARCH"
+      }
+    ]
+  },
+  {
+    name            = "match-request-component-single-query-parameter-rule" #
+    priority        = 43                                                    ##
+    action          = "count"                                               # {count, allow, block}
+    expression_type = "match-statement"                                     ##
+    statements = [                                                          ##
+      {
+        inspect               = "single-query-parameter" ##
+        positional_constraint = "CONTAINS"
+        search_string         = "STRING_TO_SEARCH"
+        query_string_name     = "user"
+      }
+    ]
+  },
+  {
+    name            = "match-request-component-all-query-parameters-rule" #
+    priority        = 44                                                  ##
+    action          = "count"                                             # {count, allow, block}
+    expression_type = "match-statement"                                   ##
+    statements = [                                                        ##
+      {
+        inspect               = "all-query-parameters" ##
+        positional_constraint = "CONTAINS"
+        search_string         = "STRING_TO_SEARCH"
+      }
+    ]
+  },
+  {
+    name            = "match-request-component-uri-path-rule" #
+    priority        = 45                                      ##
+    action          = "count"                                 # {count, allow, block}
+    expression_type = "match-statement"                       ##
+    statements = [                                            ##
+      {
+        inspect               = "uri-path" ##
+        positional_constraint = "CONTAINS"
+        search_string         = "STRING_TO_SEARCH"
+      }
+    ]
+  },
+  {
+    name            = "match-request-component-query-string-rule" #
+    priority        = 46                                          ##
+    action          = "count"                                     # {count, allow, block}
+    expression_type = "match-statement"                           ##
+    statements = [                                                ##
+      {
+        inspect               = "query-string" ##
+        positional_constraint = "CONTAINS"
+        search_string         = "STRING_TO_SEARCH"
+      }
+    ]
+  },
+  ## Not available (just for test case)
+  {
+    name            = "match-request-component-body-rule" #
+    priority        = 47                                  ##
+    action          = "count"                             # {count, allow, block}
+    expression_type = "match-statement"                   ##
+    statements = [                                        ##
+      {
+        inspect               = "body" ##
+        positional_constraint = "CONTAINS"
+        search_string         = "STRING_TO_SEARCH"
+      }
+    ]
+  },
+  {
+    ## Not available (just for test case)
+    name            = "match-request-component-json-body-rule" #
+    priority        = 48                                       ##
+    action          = "count"                                  # {count, allow, block}
+    expression_type = "match-statement"                        ##
+    statements = [                                             ##
+      {
+        inspect               = "json-body" ##
+        positional_constraint = "CONTAINS"
+        search_string         = "STRING_TO_SEARCH"
+      }
+    ]
+  },
+  {
+    name            = "match-request-component-http-method-rule" #
+    priority        = 49                                         ##
+    action          = "count"                                    # {count, allow, block}
+    expression_type = "match-statement"                          ##
+    statements = [                                               ##
+      {
+        inspect               = "http-method" ##
+        positional_constraint = "CONTAINS"
+        search_string         = "post"
+      }
+    ]
+  },
+  /* -------------------------------------------------------------------------- */
+  /*                                And Statement                               */
+  /* -------------------------------------------------------------------------- */
+  {
+    name            = "match-request-component-http-method-rule" #
+    priority        = 50                                         ##
+    action          = "count"                                    # {count, allow, block}
+    expression_type = "and-statements"                           ##
+    statements = [                                               ##
+      {
+        inspect               = "http-method" ##
+        is_negated_statement  = false
+        positional_constraint = "CONTAINS"
+        search_string         = "post"
+      },
+      {
+        inspect               = "single-header" ##
+        header_name           = "host"
+        is_negated_statement  = true
+        positional_constraint = "CONTAINS"
+        search_string         = "STRING_TO_SEARCH"
+      },
+      {
+        inspect    = "originate-from-an-ip-addresses-in" ##
+        ip_set_key = "oozou-vpn-ipv4-set"
+      },
+      {
+        inspect       = "originate-from-a-country-in" ##
+        country_codes = ["TH"]
+      }
+    ]
+  },
+]
 ```
 
 <!-- BEGIN_TF_DOCS -->
