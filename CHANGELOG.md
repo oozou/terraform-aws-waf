@@ -2,6 +2,26 @@
 
 All notable changes to this module will be documented in this file.
 
+## [v1.1.0] - 2023-06-21
+
+### Changed
+
+- Update default type of `var.is_create_logging_configuration`
+- The order of attributes in resource `aws_wafv2_web_acl.this` and it's naming format
+
+### Added 
+
+- New complete example, custom_rules usage
+- Add local var `name`,`originate_from_a_country_in`,`originate_from_an_ip_addresses_in`,`has_a_label`,`single_header`,`single_query_parameter`,`all_query_parameters`,`uri_path`,`query_string`,`http_method`,`request_component_dynamic_blocks`,
+- Variables var.ip_set and var.custom_rules
+- Constraint version to terraform `>= 1.0.0`
+- New resource aws_wafv2_ip_set.this. We didn't remove the previous ip_set rule feature; we add new one
+- The dynamic `rule` block to support custom_rules in resource `aws_wafv2_web_acl.this`
+
+### Removed
+
+- Variables `local.prefix` and use `local.name` instead
+
 ## [v1.0.3] - 2022-10-25
 
 ### Changed
