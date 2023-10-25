@@ -25,6 +25,16 @@ resource "aws_wafv2_web_acl" "this" {
     metric_name                = "All"
   }
 
+  dynamic "custom_response_body" {
+    for_each = var.custom_response_body
+
+    content {
+      key          = lookup(custom_response_body.value, "key", null)
+      content      = lookup(custom_response_body.value, "content", null)
+      content_type = lookup(custom_response_body.value, "content_type", null)
+    }
+  }
+
   dynamic "rule" {
     for_each = local.managed_rules
     content {

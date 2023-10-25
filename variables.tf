@@ -150,7 +150,13 @@ variable "redacted_fields" {
 }
 
 variable "logging_filter" {
-  type        = any
   description = "A configuration block that specifies which web requests are kept in the logs and which are dropped. You can filter on the rule action and on the web request labels that were applied by matching rules during web ACL evaluation."
+  type        = any
   default     = {}
+}
+
+variable "custom_response_body" {
+  description = "(optional) Define custom response body"
+  type        = list(any)
+  default     = []
 }
