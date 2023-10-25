@@ -37,7 +37,7 @@ module "waf_cloudfront" {
           inspect               = "single-header"
           header_name           = "host"
           positional_constraint = "CONTAINS"
-          search_string         = "cms.mobilethuat.starbuckscard.in.th"
+          search_string         = "cms.com"
         },
         {
           inspect              = "originate-from-an-ip-addresses-in"
@@ -101,7 +101,7 @@ module "waf_alb" {
           inspect               = "single-header"
           header_name           = "host"
           positional_constraint = "CONTAINS"
-          search_string         = "cms.mobilethuat.starbuckscard.in.th"
+          search_string         = "cms.com"
         },
         {
           inspect              = "originate-from-an-ip-addresses-in"
@@ -117,7 +117,7 @@ module "waf_alb" {
     },
   ]
 
-  association_resources = ["arn:aws:elasticloadbalancing:ap-southeast-1:xxxx:loadbalancer/app/xxxxx"]
+  association_resources = ["arn:aws:elasticloadbalancing:ap-southeast-1:xxx:loadbalancer/app/xxx"]
 
   tags = var.custom_tags
 }
