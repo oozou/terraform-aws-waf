@@ -2,8 +2,9 @@ locals {
   name = format("%s-%s-%s", var.prefix, var.environment, var.name)
   tags = merge(
     {
-      "Environment" = var.environment,
       "Terraform"   = "true"
+      "Environment" = var.environment,
+      "Module"      = "terraform-aws-waf"
     },
     var.tags
   )

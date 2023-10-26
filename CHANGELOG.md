@@ -2,6 +2,18 @@
 
 All notable changes to this module will be documented in this file.
 
+## [v1.1.1] - 2023-10-26
+
+### Added 
+
+- Add custom response from waf and support or statements
+  - Resource: `aws_wafv2_web_acl.this`
+  - Variable: `custom_response_body`
+
+### Changed
+
+- Add tagging with module name in `local.tags`
+
 ## [v1.1.0] - 2023-06-21
 
 ### Changed
