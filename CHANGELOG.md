@@ -14,8 +14,6 @@ All notable changes to this module will be documented in this file.
 
 - Add tagging with module name in `local.tags`
 
-### Removed
-
 ## [v1.1.0] - 2023-06-21
 
 ### Changed
