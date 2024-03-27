@@ -256,8 +256,32 @@ resource "aws_wafv2_web_acl" "this" {
                     }
                   }
                 }
-                #### TODO:
                 #### support size_constraint_statement (Size Match Condition)
+                dynamic "size_constraint_statement" {
+                  for_each = user_defined_statement.value.inspect == local.size_constraint && lookup(user_defined_statement.value, "is_negated_statement", false) == false ? [1] : []
+                  content {
+                    comparison_operator = user_defined_statement.value.comparison_operator
+                    size                = user_defined_statement.value.size
+                    dynamic "field_to_match" {
+                      # other fields to be added
+                      for_each = lookup(user_defined_statement.value, "field_to_match", null) == null ? [] : [lookup(user_defined_statement.value, "field_to_match")]
+                      content {
+                        dynamic "body" {
+                          for_each = lookup(field_to_match.value, "body", null) == null ? [] : [lookup(field_to_match.value, "body")]
+                          content {
+                            #oversize_handling = lookup(json_body.value, "oversize_handling", null) #not support as of now
+                          }
+                        }
+                      }
+                    }  
+                    text_transformation {
+                      priority = 0
+                      type     = "NONE"
+                    }
+                  
+                  }
+                }
+
                 #### support sqli_match_statement (Attack Match Condition)
                 /* -------------------------------------------------------------------------- */
                 /*       (END): SINGLE MATCH STATEMEN (1) [is_negated_statement = false]      */
@@ -400,6 +424,30 @@ resource "aws_wafv2_web_acl" "this" {
                       }
                       #### TODO:
                       #### support size_constraint_statement (Size Match Condition)
+                      dynamic "size_constraint_statement" {
+                        for_each = user_defined_statement.value.inspect == local.size_constraint ? [1] : []
+                        content {
+                          comparison_operator = user_defined_statement.value.comparison_operator
+                          size                = user_defined_statement.value.size
+                          dynamic "field_to_match" {
+                            # other fields to be added
+                            for_each = lookup(user_defined_statement.value, "field_to_match", null) == null ? [] : [lookup(user_defined_statement.value, "field_to_match")]
+                            content {
+                              dynamic "body" {
+                                for_each = lookup(field_to_match.value, "body", null) == null ? [] : [lookup(field_to_match.value, "body")]
+                                content {
+                                  #oversize_handling = lookup(json_body.value, "oversize_handling", null) #not support as of now
+                                }
+                              }
+                            }
+                          }  
+                          text_transformation {
+                            priority = 0
+                            type     = "NONE"
+                          }
+                        
+                        }
+                      }
                       #### support sqli_match_statement (Attack Match Condition)
                       /* -------------------------------------------------------------------------- */
                       /*         (END): SINGLE MATCH STATEMEN [is_negated_statement = true]         */
@@ -552,8 +600,32 @@ resource "aws_wafv2_web_acl" "this" {
                     }
                   }
                 }
-                #### TODO:
+
                 #### support size_constraint_statement (Size Match Condition)
+                dynamic "size_constraint_statement" {
+                  for_each = user_defined_statement.value.inspect == local.size_constraint && lookup(user_defined_statement.value, "is_negated_statement", false) == false ? [1] : []
+                  content {
+                    comparison_operator = user_defined_statement.value.comparison_operator
+                    size                = user_defined_statement.value.size
+                    dynamic "field_to_match" {
+                      # other fields to be added
+                      for_each = lookup(user_defined_statement.value, "field_to_match", null) == null ? [] : [lookup(user_defined_statement.value, "field_to_match")]
+                      content {
+                        dynamic "body" {
+                          for_each = lookup(field_to_match.value, "body", null) == null ? [] : [lookup(field_to_match.value, "body")]
+                          content {
+                            #oversize_handling = lookup(json_body.value, "oversize_handling", null) #not support as of now
+                          }
+                        }
+                      }
+                    }  
+                    text_transformation {
+                      priority = 0
+                      type     = "NONE"
+                    }
+                  
+                  }
+                }
                 #### support sqli_match_statement (Attack Match Condition)
                 /* -------------------------------------------------------------------------- */
                 /*       (END): SINGLE MATCH STATEMEN (2) [is_negated_statement = false]      */
@@ -694,8 +766,31 @@ resource "aws_wafv2_web_acl" "this" {
                           }
                         }
                       }
-                      #### TODO:
                       #### support size_constraint_statement (Size Match Condition)
+                      dynamic "size_constraint_statement" {
+                        for_each = user_defined_statement.value.inspect == local.size_constraint ? [1] : []
+                        content {
+                          comparison_operator = user_defined_statement.value.comparison_operator
+                          size                = user_defined_statement.value.size
+                          dynamic "field_to_match" {
+                            # other fields to be added
+                            for_each = lookup(user_defined_statement.value, "field_to_match", null) == null ? [] : [lookup(user_defined_statement.value, "field_to_match")]
+                            content {
+                              dynamic "body" {
+                                for_each = lookup(field_to_match.value, "body", null) == null ? [] : [lookup(field_to_match.value, "body")]
+                                content {
+                                  #oversize_handling = lookup(json_body.value, "oversize_handling", null) #not support as of now
+                                }
+                              }
+                            }
+                          }  
+                          text_transformation {
+                            priority = 0
+                            type     = "NONE"
+                          }
+                        
+                        }
+                      }
                       #### support sqli_match_statement (Attack Match Condition)
                       /* -------------------------------------------------------------------------- */
                       /*       (END): SINGLE MATCH STATEMEN (2) [is_negated_statement = true]       */
@@ -846,8 +941,40 @@ resource "aws_wafv2_web_acl" "this" {
             }
           }
         }
-        #### TODO:
+
         #### support size_constraint_statement (Size Match Condition)
+        dynamic "geo_match_statement" {
+          for_each = rule.value.expression_type == "match-statement" && rule.value.statements[0].inspect == local.originate_from_a_country_in ? [1] : []
+          content {
+            country_codes = rule.value.statements[0].country_codes
+          }
+        }
+
+        dynamic "size_constraint_statement" {
+          for_each = rule.value.expression_type == "size-constraint-statement" && rule.value.statements[0].inspect == local.size_constraint ? [1] : []
+          content {
+            comparison_operator = rule.value.statements[0].comparison_operator
+            size                = rule.value.statements[0].size
+            dynamic "field_to_match" {
+              # other fields to be added
+              for_each = lookup(rule.value.statements[0], "field_to_match", null) == null ? [] : [lookup(rule.value.statements[0], "field_to_match")]
+              content {
+                dynamic "body" {
+                  for_each = lookup(field_to_match.value, "body", null) == null ? [] : [lookup(field_to_match.value, "body")]
+                  content {
+                    #oversize_handling = lookup(json_body.value, "oversize_handling", null) #not support as of now
+                  }
+                }
+              }
+            }  
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          
+          }
+        }
+        #### TODO:
         #### support sqli_match_statement (Attack Match Condition)
         /* -------------------------------------------------------------------------- */
         /*                        (END): SINGLE MATCH STATEMEN                        */

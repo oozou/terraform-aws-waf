@@ -2,6 +2,13 @@
 
 All notable changes to this module will be documented in this file.
 
+## [v1.2.0] - 2024-03-27
+
+### Added 
+
+- Add request size constraint statement
+  - Resource: `aws_wafv2_web_acl.this`
+
 ## [v1.1.1] - 2023-10-26
 
 ### Added 
