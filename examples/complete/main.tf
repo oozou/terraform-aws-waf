@@ -150,6 +150,31 @@ module "waf_alb" {
           country_codes        = ["TH"]
         }
       ]
+    },    
+    {
+      name            = "control-body-size" #
+      priority        = 120                              ##
+      action          = "block"                          # {count, allow, block}
+      expression_type = "and-statements"                 ##
+      statements = [                                     ##
+        {
+          inspect               = "uri-path"
+          positional_constraint = "STARTS_WITH"
+          search_string         = "/test"
+        },
+        {
+          inspect              = "size-constraint"
+          is_negated_statement = true
+          comparison_operator  = "GT"
+          size                 = 8000
+          field_to_match = {
+            body = {
+              oversize_handling = "CONTINUE"
+            }
+          }
+
+        }
+      ]
     }
   ]
 
