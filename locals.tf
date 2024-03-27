@@ -50,6 +50,7 @@ locals {
 
   /* ------------------------------ Custom Rules ------------------------------ */
   # unique_dynamic_blocks
+  size_constraint                   = "size-constraint"
   originate_from_a_country_in       = "originate-from-a-country-in"
   originate_from_an_ip_addresses_in = "originate-from-an-ip-addresses-in"
   has_a_label                       = "has-a-label"
@@ -61,7 +62,7 @@ locals {
   all_query_parameters   = "all-query-parameters"
   uri_path               = "uri-path"
   query_string           = "query-string"
-  # body                   = "body" ## Not support by this module now
+  body                   = "body"
   # json_body              = "json-body" ## Not support by this module now
   http_method = "http-method"
   # header_order = "header_order" ## Not support by this module now
