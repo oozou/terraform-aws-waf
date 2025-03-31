@@ -1,6 +1,12 @@
 # Change Log
 
 All notable changes to this module will be documented in this file.
+## [v1.3.0] - 2025-03-31
+
+### Removed 
+
+- Remove exclude_rule
+
 
 ## [v1.2.0] - 2024-03-27
 
