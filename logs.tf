@@ -25,12 +25,6 @@ resource "aws_wafv2_web_acl_logging_configuration" "main" {
         }
       }
 
-      dynamic "single_query_argument" {
-        for_each = length(lookup(redacted_fields.value, "single_query_argument", {})) == 0 ? [] : [lookup(redacted_fields.value, "single_query_argument", {})]
-        content {
-          name = lookup(single_query_argument.value, "name", null)
-        }
-      }
     }
   }
 

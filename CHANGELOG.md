@@ -5,7 +5,9 @@ All notable changes to this module will be documented in this file.
 
 ### Removed 
 
-- Remove exclude_rule
+- Remove exclude_rule block
+- Remove single_query_argument block in aws_wafv2_web_acl_logging_configuration
+- Change AWS provider version to >= 5.0.0
 
 
 ## [v1.2.0] - 2024-03-27
