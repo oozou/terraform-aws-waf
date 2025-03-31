@@ -58,12 +58,6 @@ resource "aws_wafv2_web_acl" "this" {
           name        = rule.value.name
           vendor_name = "AWS"
 
-          dynamic "excluded_rule" {
-            for_each = rule.value.excluded_rules
-            content {
-              name = excluded_rule.value
-            }
-          }
         }
       }
 
