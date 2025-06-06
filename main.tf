@@ -58,18 +58,18 @@ resource "aws_wafv2_web_acl" "this" {
           name        = rule.value.name
           vendor_name = "AWS"
 
+          dynamic "rule_action_override" {
+            for_each = rule.value.excluded_rules
+            content {
+              action_to_use {
+                count {}
+              }
+              name = excluded_rule.value
+            }
+          }
         }
       }
 
-      dynamic "rule_action_override" {
-        for_each = rule.value.excluded_rules
-        content {
-          action_to_use {
-            count {}
-          }
-          name = excluded_rule.value
-        }
-      }
 
       visibility_config {
         cloudwatch_metrics_enabled = var.is_enable_cloudwatch_metrics
