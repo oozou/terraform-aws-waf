@@ -61,6 +61,16 @@ resource "aws_wafv2_web_acl" "this" {
         }
       }
 
+      dynamic "rule_action_override" {
+        for_each = rule.value.excluded_rules
+        content {
+          action_to_use {
+            count {}
+          }
+          name = excluded_rule.value
+        }
+      }
+
       visibility_config {
         cloudwatch_metrics_enabled = var.is_enable_cloudwatch_metrics
         metric_name                = rule.value.name
