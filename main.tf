@@ -64,7 +64,7 @@ resource "aws_wafv2_web_acl" "this" {
               action_to_use {
                 count {}
               }
-              name = excluded_rule.value
+              name = rule_action_override.value
             }
           }
         }
