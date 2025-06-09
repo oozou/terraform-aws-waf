@@ -277,12 +277,12 @@ resource "aws_wafv2_web_acl" "this" {
                           }
                         }
                       }
-                    }  
+                    }
                     text_transformation {
                       priority = 0
                       type     = "NONE"
                     }
-                  
+
                   }
                 }
 
@@ -444,12 +444,12 @@ resource "aws_wafv2_web_acl" "this" {
                                 }
                               }
                             }
-                          }  
+                          }
                           text_transformation {
                             priority = 0
                             type     = "NONE"
                           }
-                        
+
                         }
                       }
                       #### support sqli_match_statement (Attack Match Condition)
@@ -622,12 +622,12 @@ resource "aws_wafv2_web_acl" "this" {
                           }
                         }
                       }
-                    }  
+                    }
                     text_transformation {
                       priority = 0
                       type     = "NONE"
                     }
-                  
+
                   }
                 }
                 #### support sqli_match_statement (Attack Match Condition)
@@ -787,12 +787,12 @@ resource "aws_wafv2_web_acl" "this" {
                                 }
                               }
                             }
-                          }  
+                          }
                           text_transformation {
                             priority = 0
                             type     = "NONE"
                           }
-                        
+
                         }
                       }
                       #### support sqli_match_statement (Attack Match Condition)
@@ -970,12 +970,12 @@ resource "aws_wafv2_web_acl" "this" {
                   }
                 }
               }
-            }  
+            }
             text_transformation {
               priority = 0
               type     = "NONE"
             }
-          
+
           }
         }
         #### TODO:

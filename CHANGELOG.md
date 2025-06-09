@@ -1,6 +1,12 @@
 # Change Log
 
 All notable changes to this module will be documented in this file.
+## [v1.3.1] - 2025-06-09
+
+### Added 
+
+- Add rule_action_override dynamic block
+
 ## [v1.3.0] - 2025-03-31
 
 ### Removed 
